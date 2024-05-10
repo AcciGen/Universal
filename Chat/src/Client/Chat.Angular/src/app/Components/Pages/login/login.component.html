@@ -1,0 +1,17 @@
+<div class="container">
+    <div class="login-form">
+      <h2>Login</h2>
+      <form (submit)="login()">
+        <div>
+          <label for="phoneNumber">Phone Number</label>
+          <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="loginData.phoneNumber" required>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" [(ngModel)]="loginData.password" required>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+  

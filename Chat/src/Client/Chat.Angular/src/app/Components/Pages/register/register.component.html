@@ -1,0 +1,27 @@
+<div>
+    <h2>Registratsiya</h2>
+    <form (ngSubmit)="onSubmit()">
+      <div>
+        <label for="firstName">Ism</label>
+        <input type="text" id="firstName" name="firstName" [(ngModel)]="registerData.firstName" required>
+      </div>
+      <div>
+        <label for="lastName">Familiya</label>
+        <input type="text" id="lastName" name="lastName" [(ngModel)]="registerData.lastName">
+      </div>
+      <div>
+        <label for="userName">Foydalanuvchi nomi</label>
+        <input type="text" id="userName" name="userName" [(ngModel)]="registerData.userName">
+      </div>
+      <div>
+        <label for="phoneNumber">Telefon raqami</label>
+        <input type="tel" id="phoneNumber" name="phoneNumber" [(ngModel)]="registerData.phoneNumber" required>
+      </div>
+      <div>
+        <label for="password">Parol</label>
+        <input type="password" id="password" name="password" [(ngModel)]="registerData.password" required>
+      </div>
+      <button type="submit">Ro'yxatdan o'tish</button>
+    </form>
+  </div>
+  
