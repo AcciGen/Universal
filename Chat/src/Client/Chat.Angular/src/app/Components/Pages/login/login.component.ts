@@ -3,6 +3,7 @@ import { LoginDTO } from '../../../Model/login-dto';
 import { AuthService } from '../../../Services/Auth/auth.service';
 import { TokenDTO } from '../../../Model/token-dto';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent {
     phoneNumber: '',
     password: ''
   };
-  constructor(private authService: AuthService) {}
+
+  constructor(private authService: AuthService,private router:Router) {}
 
   login() {
     this.authService.login(this.loginData).subscribe(
@@ -26,6 +28,7 @@ export class LoginComponent {
         console.log(response);
         
         this.authService.storeToken(response)
+        this.router.navigate(['/chat'])
       },
       error => {
         console.error('Error logging in:', error);

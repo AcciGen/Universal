@@ -3,6 +3,7 @@ import { RegisterDTO } from '../../../Model/register-dto';
 import { FormsModule, NgModel } from '@angular/forms';
 import { AuthService } from '../../../Services/Auth/auth.service';
 import { TokenDTO } from '../../../Model/token-dto';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,7 @@ export class RegisterComponent {
     password: ''
   };
 
-  constructor(private authService:AuthService){}
+  constructor(private authService:AuthService,private router:Router){}
 
   onSubmit() {
     this.authService.register(this.registerData).subscribe(
@@ -30,6 +31,7 @@ export class RegisterComponent {
         console.log(response);
 
         this.authService.storeToken(response)
+        this.router.navigate(['/chat'])
       },
       error => {
         console.error('Ro\'yxatdan o\'tishda xatolik:', error);

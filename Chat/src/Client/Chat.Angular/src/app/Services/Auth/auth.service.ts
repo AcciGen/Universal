@@ -37,4 +37,8 @@ export class AuthService {
     localStorage.setItem('refreshToken', token.refreshToken);
     localStorage.setItem('expireDate', token.expireDate.toString());
   }
+
+  isLoggedIn():boolean{
+    return !! localStorage.getItem('accessToken');
+  }
 }
