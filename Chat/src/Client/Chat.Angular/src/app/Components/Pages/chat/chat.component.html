@@ -1,7 +1,7 @@
 <header>
   <div class="profile">
-    <button id="profileBtn">Profile</button>
-    <button id="logoutBtn">Logout</button>
+    <button [routerLink]="['/profile',profile?.id]" id="profileBtn">Profile</button>
+    <button id="logoutBtn" (click)="LogOut()">Logout</button>
   </div>
 </header>
 
@@ -15,7 +15,6 @@
 
 <footer>
   <form (ngSubmit)="sendMessage()">
-    <input type="text" [(ngModel)]="user" name="user" placeholder="User">
     <input type="text" [(ngModel)]="message" name="message" placeholder="Message">
     <button type="submit">Send</button>
   </form>

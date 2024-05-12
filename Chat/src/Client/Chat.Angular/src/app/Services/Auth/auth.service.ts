@@ -26,6 +26,10 @@ export class AuthService {
     return this.http.post<TokenDTO>(`${this.apiUrl}/Login`, loginData);
   }
 
+  logOut(){
+    window.localStorage.clear();
+  }
+
   getAccessToken(){
     return window.localStorage.getItem('accessToken');
   }
@@ -44,7 +48,7 @@ export class AuthService {
     return !! localStorage.getItem('accessToken');
   }
 
-  getProfileInfo():Observable<ProfileInfoDTO> {
+  getProfileInfo():Observable<ProfileInfoDTO>{
     const storedProfile = localStorage.getItem('profile');
     if (storedProfile) {
       return new Observable(observer => {
@@ -59,12 +63,12 @@ export class AuthService {
   private fetchProfileFromServer(): Observable<ProfileInfoDTO> {
     return this.http.get<ProfileInfoDTO>(`${this.apiUrl}/Profile`).pipe(
       tap(profile => {
-        this.saveProfileToLocalStorage(profile);
+        this.storeProfile(profile);
       })
     );
   }
 
-  private saveProfileToLocalStorage(profile: ProfileInfoDTO): void {
+  storeProfile(profile: ProfileInfoDTO): void {
     localStorage.setItem('profile', JSON.stringify(profile));
   }
 

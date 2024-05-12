@@ -2,11 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { AuthService } from '../../../Services/Auth/auth.service';
+import { Router, RouterLink } from '@angular/router';
+import { ProfileInfoDTO } from '../../../Model/profile-info-dto';
+import { error } from 'console';
 
 @Component({
   selector: 'app-chat',
   standalone: true,
-  imports: [FormsModule],
+  imports: [
+    FormsModule,
+    RouterLink
+  ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
 })
@@ -14,11 +20,11 @@ export class ChatComponent implements OnInit {
   
   private connection: HubConnection;
   public messages: string[] = [];
-  public user: string = "";
   public message: string = "";
+  profile: ProfileInfoDTO | undefined;
 
 
-  constructor(private authService:AuthService) {
+  constructor(private authService:AuthService,private router:Router) {
     this.connection = new HubConnectionBuilder()
       .withUrl('https://localhost:7139/chathub',
       {
@@ -29,6 +35,8 @@ export class ChatComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.getProfile();
+
     this.connection.on('ReceiveMessage', (user, message) => {
       this.messages.push(`${user}: ${message}`);
     });
@@ -42,8 +50,25 @@ export class ChatComponent implements OnInit {
   }
 
   async sendMessage() {
-    if (!this.user || !this.message) return;
-    await this.connection.invoke('SendMessage', this.user, this.message);
+    if (!this.message) return;
+    await this.connection.invoke('SendMessage', this.message);
     this.message = '';
+  }
+
+  getProfile() {
+    this.authService.getProfileInfo().subscribe(
+      (profile: ProfileInfoDTO) => {
+        this.profile = profile;
+        console.log('Profile Info:', this.profile);
+      },
+      (error) => {
+        console.error('Error fetching profile:', error);
+      }
+    );
+  }
+
+  LogOut(){
+    window.localStorage.clear();
+    this.router.navigate(['/login'])
   }
 }

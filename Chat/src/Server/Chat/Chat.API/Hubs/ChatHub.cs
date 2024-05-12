@@ -7,10 +7,10 @@ namespace Chat.API.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
-        public async Task SendMessage(string user, string message)
+        public async Task SendMessage(string message)
         {
             var userId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
+            await Clients.All.SendAsync("ReceiveMessage", userId, message);
         }
     }
 }
