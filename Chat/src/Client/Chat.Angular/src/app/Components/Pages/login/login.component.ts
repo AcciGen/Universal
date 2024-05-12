@@ -4,6 +4,7 @@ import { AuthService } from '../../../Services/Auth/auth.service';
 import { TokenDTO } from '../../../Model/token-dto';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProfileInfoDTO } from '../../../Model/profile-info-dto';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
 
   constructor(private authService: AuthService,private router:Router) {}
 
-  login() {
+  onSubmit(){
     this.authService.login(this.loginData).subscribe(
       (response: TokenDTO) => {
         console.log('Login successful');

@@ -3,7 +3,9 @@ using Identity.API.DataTransferObjects.Auth;
 using Identity.API.Models;
 using Identity.API.Services.Helper;
 using Identity.API.Services.Token;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Identity.API.Services.Auth
 {
@@ -12,15 +14,21 @@ namespace Identity.API.Services.Auth
         private readonly ApplicationDbContext _context;
         private readonly ITokenService _jwtTokenService;
         private readonly IPasswordHasher _passwordHasher;
+        private readonly IHttpContextAccessor _contextAccessor;
 
-        public AuthService(ApplicationDbContext context, ITokenService jwtTokenService, IPasswordHasher passwordHasher)
+        public AuthService(
+            ApplicationDbContext context,
+            ITokenService jwtTokenService,
+            IPasswordHasher passwordHasher,
+            IHttpContextAccessor contextAccessor)
         {
             _context = context;
             _jwtTokenService = jwtTokenService;
             _passwordHasher = passwordHasher;
+            _contextAccessor = contextAccessor;
         }
 
-        public async Task<TokenDTO> Login(LoginDTO loginDTO)
+        public async ValueTask<TokenDTO> LoginAsync(LoginDTO loginDTO)
         {
             var user = await _context.Users.FirstOrDefaultAsync(user => user.PhoneNumber == loginDTO.PhoneNumber);
 
@@ -37,7 +45,7 @@ namespace Identity.API.Services.Auth
             );
         }
 
-        public async Task<TokenDTO> Register(RegisterDTO registerDTO)
+        public async ValueTask<TokenDTO> RegisterAsync(RegisterDTO registerDTO)
         {
             var salt = Guid.NewGuid().ToString();
             var PasswordHash = _passwordHasher.Encrypt(registerDTO.Password, salt);
@@ -65,11 +73,23 @@ namespace Identity.API.Services.Auth
             );
         }
 
-        public async Task<TokenDTO> RefreshTokenAsync(RefreshTokenDTO refreshTokenDTO)
+        public async ValueTask<TokenDTO> RefreshTokenAsync(RefreshTokenDTO refreshTokenDTO)
         {
             TokenDTO token = await _jwtTokenService.RefreshToken(refreshTokenDTO);
 
             return token;
+        }
+
+        public async ValueTask<ProfileInfoDTO> ProfileAsync()
+        {
+            var userId = _contextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId is null)
+                throw new Exception("UserId is cannot be null");
+
+            var user = await _context.Users.FindAsync(long.Parse(userId));
+            var profileDTO = user.Adapt<ProfileInfoDTO>();
+
+            return profileDTO;
         }
     }
 }

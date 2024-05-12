@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { AuthService } from '../../../Services/Auth/auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -17,9 +18,13 @@ export class ChatComponent implements OnInit {
   public message: string = "";
 
 
-  constructor() {
+  constructor(private authService:AuthService) {
     this.connection = new HubConnectionBuilder()
-      .withUrl('https://localhost:7139/chathub')
+      .withUrl('https://localhost:7139/chathub',
+      {
+        accessTokenFactory:() => this.authService.getAccessToken()!
+      })
+      .configureLogging(LogLevel.Information)
       .build();
   }
 

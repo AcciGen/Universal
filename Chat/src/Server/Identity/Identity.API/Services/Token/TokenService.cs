@@ -26,12 +26,7 @@ namespace Identity.API.Services.Token
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var expireInMinutes = Convert.ToInt32(_configuration["JWT:ExpireInMinutes"] ?? "1440");
 
-            var claims = new List<Claim>
-            {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
-
-            };
+            var claims = new List<Claim>();
 
             if (additionalClaims?.Any() == true)
                 claims.AddRange(additionalClaims);
@@ -93,8 +88,9 @@ namespace Identity.API.Services.Token
             if (user.RefreshToken != refreshTokenDTO.RefreshToken)
                 throw new Exception("Refresh token is not valid");
 
+            /*
             if (user.RefreshTokenExpireDate <= DateTime.Now)
-                throw new Exception("Refresh token has already been expired");
+                throw new Exception("Refresh token has already been expired");*/
 
             var newAccessToken = GenerateJWT(user);
 

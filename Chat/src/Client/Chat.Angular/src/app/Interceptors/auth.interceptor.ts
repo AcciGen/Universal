@@ -9,6 +9,7 @@ import { RefreshTokenDTO } from '../Model/refresh-token-dto';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const myToken = authService.getAccessToken();
+  console.log(myToken)
   const router = inject(Router)
 
   if(myToken){

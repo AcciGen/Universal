@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { TokenDTO } from '../../Model/token-dto';
 import { RegisterDTO } from '../../Model/register-dto';
 import { LoginDTO } from '../../Model/login-dto';
+import { ProfileInfoDTO } from '../../Model/profile-info-dto';
+import { Observable, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +42,33 @@ export class AuthService {
 
   isLoggedIn():boolean{
     return !! localStorage.getItem('accessToken');
+  }
+
+  getProfileInfo():Observable<ProfileInfoDTO> {
+    const storedProfile = localStorage.getItem('profile');
+    if (storedProfile) {
+      return new Observable(observer => {
+        observer.next(JSON.parse(storedProfile));
+        observer.complete();
+      });
+    } else {
+      return this.fetchProfileFromServer();
+    }
+  }
+
+  private fetchProfileFromServer(): Observable<ProfileInfoDTO> {
+    return this.http.get<ProfileInfoDTO>(`${this.apiUrl}/Profile`).pipe(
+      tap(profile => {
+        this.saveProfileToLocalStorage(profile);
+      })
+    );
+  }
+
+  private saveProfileToLocalStorage(profile: ProfileInfoDTO): void {
+    localStorage.setItem('profile', JSON.stringify(profile));
+  }
+
+  test(){
+    return this.http.get('https://localhost:7139/api/Test');
   }
 }

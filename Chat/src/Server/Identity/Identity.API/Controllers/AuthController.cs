@@ -1,5 +1,6 @@
 ﻿using Identity.API.DataTransferObjects.Auth;
 using Identity.API.Services.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Identity.API.Controllers
@@ -15,11 +16,16 @@ namespace Identity.API.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDTO loginDTO)
-            => Ok(await _authService.Login(loginDTO));
+            => Ok(await _authService.LoginAsync(loginDTO));
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+           => Ok(await _authService.ProfileAsync());
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDTO registerDTO)
-            => Ok(await _authService.Register(registerDTO));
+            => Ok(await _authService.RegisterAsync(registerDTO));
 
         [HttpPost]
         public async Task<IActionResult> RefreshTokenAsync(RefreshTokenDTO refreshTokenDTO)

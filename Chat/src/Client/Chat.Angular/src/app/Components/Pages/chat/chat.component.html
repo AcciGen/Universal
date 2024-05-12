@@ -1,11 +1,22 @@
-@for (message of messages; track message) {
-    <li>{{message}}</li>
-} @empty {
-    <li>There are no items.</li>
-}
+<header>
+  <div class="profile">
+    <button id="profileBtn">Profile</button>
+    <button id="logoutBtn">Logout</button>
+  </div>
+</header>
 
-<form (ngSubmit)="sendMessage()">
-  <input type="text" [(ngModel)]="user" name="user" placeholder="User">
-  <input type="text" [(ngModel)]="message" name="message" placeholder="Message">
-  <button type="submit">Send</button>
-</form>
+<main>
+  @for (message of messages; track message) {
+    <li>{{message}}</li>
+  } @empty {
+      <li>There are no items.</li>
+  }
+</main>
+
+<footer>
+  <form (ngSubmit)="sendMessage()">
+    <input type="text" [(ngModel)]="user" name="user" placeholder="User">
+    <input type="text" [(ngModel)]="message" name="message" placeholder="Message">
+    <button type="submit">Send</button>
+  </form>
+</footer>

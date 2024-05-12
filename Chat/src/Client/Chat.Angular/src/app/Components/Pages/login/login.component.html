@@ -1,7 +1,7 @@
 <div class="container">
     <div class="login-form">
       <h2>Login</h2>
-      <form (submit)="login()">
+      <form (submit)="onSubmit()">
         <div>
           <label for="phoneNumber">Phone Number</label>
           <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="loginData.phoneNumber" required>
