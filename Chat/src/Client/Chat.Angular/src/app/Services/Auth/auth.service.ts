@@ -5,6 +5,7 @@ import { RegisterDTO } from '../../Model/register-dto';
 import { LoginDTO } from '../../Model/login-dto';
 import { ProfileInfoDTO } from '../../Model/profile-info-dto';
 import { Observable, tap } from 'rxjs';
+import { Message } from '../../Model/message';
 
 @Injectable({
   providedIn: 'root'
@@ -74,5 +75,9 @@ export class AuthService {
 
   test(){
     return this.http.get('https://localhost:7139/api/Test');
+  }
+
+  getAllMessages(){
+    return this.http.get<Message[]>('https://localhost:7139/api/Messages');
   }
 }

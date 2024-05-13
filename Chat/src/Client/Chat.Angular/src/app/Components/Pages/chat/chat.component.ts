@@ -5,6 +5,7 @@ import { AuthService } from '../../../Services/Auth/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { ProfileInfoDTO } from '../../../Model/profile-info-dto';
 import { error } from 'console';
+import { Message } from '../../../Model/message';
 
 @Component({
   selector: 'app-chat',
@@ -36,6 +37,13 @@ export class ChatComponent implements OnInit {
 
   async ngOnInit() {
     this.getProfile();
+
+    this.authService.getAllMessages().subscribe(
+      (messages:Message[]) =>{
+        console.log(messages)
+        this.messages = messages.map(message =>message.senderId +':'+ message.text);
+      }
+    )
 
     this.connection.on('ReceiveMessage', (user, message) => {
       this.messages.push(`${user}: ${message}`);
