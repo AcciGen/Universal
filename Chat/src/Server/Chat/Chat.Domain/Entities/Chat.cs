@@ -5,7 +5,11 @@ namespace Chat.Domain.Entities
     public class Chat
     {
         public Guid Id { get; set; }
+        public string Link { get; set; }
         public ChatType Type { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
+
+        public virtual List<ChatUser> Users { get; set; }
+        public virtual List<Message> Messages { get; set; }
     }
 }
