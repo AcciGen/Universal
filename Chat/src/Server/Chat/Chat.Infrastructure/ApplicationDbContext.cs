@@ -11,5 +11,6 @@ namespace Chat.Infrastructure
 
         public DbSet<Message> Messages { get; set; }
         public DbSet<Domain.Entities.Chat> Chats { get; set; }
+        public DbSet<ChatUser> Users { get; set; }
     }
 }
