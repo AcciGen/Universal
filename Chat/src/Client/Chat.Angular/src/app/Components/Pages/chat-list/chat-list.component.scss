@@ -1,0 +1,39 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .chat-list {
+    width: 300px; /* Adjust width as needed */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .chat-item {
+    display: flex;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .chat-item img {
+    width: 50px; /* Adjust image size as needed */
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  
+  .chat-info {
+    flex: 1;
+  }
+  
+  .chat-info h3 {
+    margin: 0;
+  }
+  
+  .chat-info p {
+    margin: 5px 0;
+    color: #666;
+  }
+  

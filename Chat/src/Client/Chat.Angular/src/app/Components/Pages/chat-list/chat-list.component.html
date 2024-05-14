@@ -1,0 +1,11 @@
+<div class="chat-list">
+    @for (chat of chats; track chat.link) {
+        <div [routerLink]="['/chat',chat.id]" class="chat-item">
+            <img src="https://www.computerhope.com/jargon/g/guest-user.png" alt="Profile Picture">
+            <div class="chat-info">
+                <h3>John Doe {{chat.link}}</h3>
+                <p>Last message... {{chat.type}}</p>
+            </div>
+        </div>
+    }
+  </div>
