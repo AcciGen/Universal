@@ -1,4 +1,5 @@
-﻿using Chat.Infrastructure.Repositories.Messages;
+﻿using Chat.Application.DataTransferObjects;
+using Chat.Infrastructure.Repositories.Messages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
@@ -15,19 +16,21 @@ namespace Chat.API.Hubs
             _messageRepository = messageRepository;
         }
 
-        public async Task SendMessage(string message)
+        public async Task SendMessage(MessageCreationDTO messageCreationDTO)
         {
+            var httpContext = Context.GetHttpContext();
             var userId = Context.User.FindFirstValue(ClaimTypes.NameIdentifier);
             await _messageRepository.AddAsync(new Domain.Entities.Message()
             {
                 SenderId = long.Parse(userId),
-                Text = message,
+                Text = messageCreationDTO.Text,
+                ChatId = messageCreationDTO.ChatId,
                 CreatedDate = DateTime.UtcNow,
             });
 
             var firstName = Context.User.FindFirstValue(ClaimTypes.Name);
 
-            await Clients.All.SendAsync("ReceiveMessage", userId, message);
+            await Clients.All.SendAsync("ReceiveMessage", userId, messageCreationDTO.Text);
         }
     }
 }

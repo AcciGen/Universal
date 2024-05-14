@@ -13,9 +13,9 @@ namespace Chat.API.Controllers
             => _messageRepository = messageRepository;
 
         [HttpGet]
-        public async Task<IActionResult> GetAllMessages()
+        public async Task<IActionResult> GetAllMessages(Guid chatId)
         {
-            return Ok(_messageRepository.GetAll().ToList());
+            return Ok(_messageRepository.GetAll().Where(x => x.ChatId == chatId).ToList());
         }
 
         [HttpDelete]
