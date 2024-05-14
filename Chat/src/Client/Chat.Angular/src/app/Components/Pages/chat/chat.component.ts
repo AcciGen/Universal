@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { AuthService } from '../../../Services/Auth/auth.service';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProfileInfoDTO } from '../../../Model/profile-info-dto';
 import { error } from 'console';
 import { Message } from '../../../Model/message';
+import { MessageCreationDTO } from '../../../Model/message-creation-dto';
 
 @Component({
   selector: 'app-chat',
@@ -23,9 +24,9 @@ export class ChatComponent implements OnInit {
   public messages: string[] = [];
   public message: string = "";
   profile: ProfileInfoDTO | undefined;
+  chatId:string = '';
 
-
-  constructor(private authService:AuthService,private router:Router) {
+  constructor(private authService:AuthService,private router:Router,private activatedRoute:ActivatedRoute) {
     this.connection = new HubConnectionBuilder()
       .withUrl('https://localhost:7139/chathub',
       {
@@ -36,9 +37,12 @@ export class ChatComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.chatId = this.activatedRoute.snapshot.params['chatId'];
+    console.log('chatId:' + this.chatId)
+
     this.getProfile();
 
-    this.authService.getAllMessages().subscribe(
+    this.authService.getAllMessages(this.chatId).subscribe(
       (messages:Message[]) =>{
         console.log(messages)
         this.messages = messages.map(message =>message.senderId +':'+ message.text);
@@ -59,7 +63,12 @@ export class ChatComponent implements OnInit {
 
   async sendMessage() {
     if (!this.message) return;
-    await this.connection.invoke('SendMessage', this.message);
+
+    let messageRequest:MessageCreationDTO = {
+      chatId:this.chatId,
+      text:this.message
+    };
+    await this.connection.invoke('SendMessage', messageRequest);
     this.message = '';
   }
 

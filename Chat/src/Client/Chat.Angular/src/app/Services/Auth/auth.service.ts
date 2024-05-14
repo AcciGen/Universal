@@ -6,6 +6,7 @@ import { LoginDTO } from '../../Model/login-dto';
 import { ProfileInfoDTO } from '../../Model/profile-info-dto';
 import { Observable, tap } from 'rxjs';
 import { Message } from '../../Model/message';
+import { ChatDTO } from '../../Model/chat-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -77,7 +78,11 @@ export class AuthService {
     return this.http.get('https://localhost:7139/api/Test');
   }
 
-  getAllMessages(){
-    return this.http.get<Message[]>('https://localhost:7139/api/Messages');
+  getAllMessages(chatId:string){
+    return this.http.get<Message[]>(`https://localhost:7139/api/Messages?chatId=${chatId}`);
+  }
+
+  getChats(){
+    return this.http.get<ChatDTO[]>('https://localhost:7139/api/Chats');
   }
 }
