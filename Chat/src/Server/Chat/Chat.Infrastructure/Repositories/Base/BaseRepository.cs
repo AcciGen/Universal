@@ -2,7 +2,7 @@
 
 namespace Chat.Infrastructure.Repositories.Base
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+    public class BaseRepository<TEntity, TId> : IBaseRepository<TEntity, TId> where TEntity : class
     {
         private readonly ApplicationDbContext _appDbContext;
 
@@ -29,7 +29,7 @@ namespace Chat.Infrastructure.Repositories.Base
         public IQueryable<TEntity> GetAll()
             => _appDbContext.Set<TEntity>();
 
-        public async ValueTask<TEntity> GetByIdAsync(int id)
+        public async ValueTask<TEntity> GetByIdAsync(TId id)
             => await _appDbContext.Set<TEntity>().FindAsync(id);
 
         public async ValueTask<TEntity> RemoveAsync(TEntity entity)

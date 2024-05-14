@@ -2,7 +2,7 @@
 
 namespace Chat.Infrastructure.Repositories.Chats
 {
-    public interface IChatRepository : IBaseRepository<Domain.Entities.Chat>
+    public interface IChatRepository : IBaseRepository<Domain.Entities.Chat, Guid>
     {
     }
 }

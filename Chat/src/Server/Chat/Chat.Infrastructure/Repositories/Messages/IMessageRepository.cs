@@ -3,7 +3,7 @@ using Chat.Infrastructure.Repositories.Base;
 
 namespace Chat.Infrastructure.Repositories.Messages
 {
-    public interface IMessageRepository : IBaseRepository<Message>
+    public interface IMessageRepository : IBaseRepository<Message, Guid>
     {
     }
 }

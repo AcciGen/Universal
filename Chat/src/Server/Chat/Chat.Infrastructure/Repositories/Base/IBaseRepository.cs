@@ -2,9 +2,9 @@
 
 namespace Chat.Infrastructure.Repositories.Base
 {
-    public interface IBaseRepository<TEntity> where TEntity : class
+    public interface IBaseRepository<TEntity, TId> where TEntity : class
     {
-        ValueTask<TEntity> GetByIdAsync(int id);
+        ValueTask<TEntity> GetByIdAsync(TId id);
         IQueryable<TEntity> GetAll();
         ValueTask<IEnumerable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
         ValueTask<TEntity> AddAsync(TEntity entity);
