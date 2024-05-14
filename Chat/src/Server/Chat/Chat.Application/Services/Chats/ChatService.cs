@@ -1,39 +1,86 @@
-﻿using Chat.Application.DataTransferObjects;
-using Chat.Domain.Entities;
+﻿using Chat.Application.DataTransferObjects.Chats;
+using Chat.Application.Services.Helpers;
+using Chat.Domain.Enums;
+using Chat.Domain.Exxceptions;
 using Chat.Infrastructure.Repositories.Chats;
-using Mapster;
 
 namespace Chat.Application.Services.Chats
 {
     public class ChatService : IChatService
     {
         private readonly IChatRepository _chatRepository;
+        private readonly IPasswordHasher _passwordHasher;
 
-        public ChatService(IChatRepository chatRepository)
-            => _chatRepository = chatRepository;
-
-        public async ValueTask<Message> AddMessageAsync(MessageCreationDTO messageCreationDTO)
+        public ChatService(IChatRepository chatRepository, IPasswordHasher passwordHasher)
         {
-            var message = messageCreationDTO.Adapt<Message>();
-            return message;
+            _chatRepository = chatRepository;
+            _passwordHasher = passwordHasher;
         }
 
-        public ValueTask<Message> DeleteMessageAsync(Guid id)
+        public async ValueTask<Chat.Domain.Entities.Chat> AddChatAsync(long user1Id, long user2Id, ChatType type)
         {
-            throw new NotImplementedException();
+            var chat = new Chat.Domain.Entities.Chat()
+            {
+                CreatedDate = DateTime.UtcNow,
+                Type = type,
+                Link = CreateLink(user1Id, user2Id)
+            };
+
+            chat = await _chatRepository.AddAsync(chat);
+
+            return chat;
         }
 
-        public ValueTask<Message> GetMessageAsync(Guid id)
+        private string CreateLink(long user1Id, long user2Id)
         {
-            throw new NotImplementedException();
+            var kichik = user1Id < user2Id ? user1Id : user2Id;
+            var katta = user1Id > user2Id ? user1Id : user2Id;
+            var linkstring = _passwordHasher.Encrypt(kichik.ToString(), katta.ToString());
+
+            return linkstring;
         }
 
-        public ValueTask<List<Message>> GetMessagesAsync()
+        public async ValueTask<Domain.Entities.Chat> AddGroupAsync(long ownerId)
         {
-            throw new NotImplementedException();
+            return await AddChatAsync(ownerId, ownerId, ChatType.Group);
         }
 
-        public ValueTask<Message> UpdateMessageAsync(MessageModificationDTO messageModificationDTO)
+        public async ValueTask<Domain.Entities.Chat> AddChannelAsync(long ownerId)
+        {
+            return await AddChatAsync(ownerId, ownerId, ChatType.Channel);
+        }
+
+        public async ValueTask<Domain.Entities.Chat> AddPersonalChatAsync(long chat1Id, long chat2Id)
+        {
+            return await AddChatAsync(chat1Id, chat2Id, ChatType.OneToOne);
+        }
+
+        public async ValueTask<Domain.Entities.Chat> GetChatAsync(Guid chatId)
+        {
+            return await _chatRepository.GetByIdAsync(chatId);
+        }
+
+        public async ValueTask<List<Domain.Entities.Chat>> GetChatsAsync(long userId)
+        {
+            return _chatRepository.GetAll()
+                .Where(x => x.Users.Select(x => x.UserId).Contains(userId)).ToList();
+        }
+
+        public async ValueTask<Domain.Entities.Chat> DeleteChatAsync(Guid id)
+        {
+            var chat = await _chatRepository.GetByIdAsync(id);
+            if (chat is null)
+                throw new NotFoundException("Chat not found");
+
+            return await _chatRepository.RemoveAsync(chat);
+        }
+
+        public async ValueTask<List<Domain.Entities.Chat>> GetChatsAsync()
+        {
+            return _chatRepository.GetAll().ToList();
+        }
+
+        public ValueTask<Domain.Entities.Chat> UpdateChatAsync(ChatModificationDTO chatModificationDTO)
         {
             throw new NotImplementedException();
         }

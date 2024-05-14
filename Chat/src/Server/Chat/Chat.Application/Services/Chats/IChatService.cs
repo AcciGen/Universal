@@ -1,14 +1,18 @@
-﻿using Chat.Application.DataTransferObjects;
-using Chat.Domain.Entities;
+﻿using Chat.Application.DataTransferObjects.Chats;
+using Chat.Domain.Enums;
 
 namespace Chat.Application.Services.Chats
 {
     public interface IChatService
     {
-        ValueTask<Message> AddMessageAsync(MessageCreationDTO messageCreationDTO);
-        ValueTask<Message> GetMessageAsync(Guid id);
-        ValueTask<List<Message>> GetMessagesAsync();
-        ValueTask<Message> UpdateMessageAsync(MessageModificationDTO messageModificationDTO);
-        ValueTask<Message> DeleteMessageAsync(Guid id);
+        ValueTask<Chat.Domain.Entities.Chat> AddChatAsync(long chat1Id, long chat2Id, ChatType type);
+        ValueTask<Chat.Domain.Entities.Chat> AddGroupAsync(long ownerId);
+        ValueTask<Chat.Domain.Entities.Chat> AddChannelAsync(long ownerId);
+        ValueTask<Chat.Domain.Entities.Chat> AddPersonalChatAsync(long chat1Id, long chat2Id);
+        ValueTask<Chat.Domain.Entities.Chat> GetChatAsync(Guid id);
+        ValueTask<List<Chat.Domain.Entities.Chat>> GetChatsAsync(long userId);
+        ValueTask<List<Chat.Domain.Entities.Chat>> GetChatsAsync();
+        ValueTask<Chat.Domain.Entities.Chat> UpdateChatAsync(ChatModificationDTO chatModificationDTO);
+        ValueTask<Chat.Domain.Entities.Chat> DeleteChatAsync(Guid id);
     }
 }
